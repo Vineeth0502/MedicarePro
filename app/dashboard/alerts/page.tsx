@@ -79,7 +79,7 @@ export default function AlertsPage() {
   useEffect(() => {
     const interval = setInterval(() => {
       loadAllData(false) // Silent polling
-    }, 15000)
+    }, 60000) // Poll every 60 seconds (1 minute) to reduce server load
     return () => clearInterval(interval)
   }, [activeTab])
 

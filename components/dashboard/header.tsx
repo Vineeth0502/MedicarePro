@@ -234,15 +234,15 @@ export function Header() {
       }
       window.addEventListener('notificationsUpdated', handleNotificationsUpdated)
       
-      // Set up polling for new notifications every 5 seconds (more frequent for messages)
+      // Set up polling for new notifications every 30 seconds (reduced frequency)
       // Only start polling if we have a token
       const token = localStorage.getItem('token')
       if (token) {
-        // Poll immediately, then every 5 seconds
+        // Poll immediately, then every 30 seconds
         checkForNewNotifications()
         const pollInterval = setInterval(() => {
           checkForNewNotifications()
-        }, 5000) // Poll every 5 seconds for faster message detection
+        }, 30000) // Poll every 30 seconds to reduce server load
 
         return () => {
           clearInterval(pollInterval)

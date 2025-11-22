@@ -66,10 +66,10 @@ export default function DoctorsPage() {
   }, [router])
 
   useEffect(() => {
-    if (doctors.length > 0) {
+    if (doctors.length > 0 && user?._id) {
       loadDoctorStats()
     }
-  }, [doctors])
+  }, [doctors, user])
 
   const loadDoctors = async () => {
     try {
@@ -87,15 +87,30 @@ export default function DoctorsPage() {
   }
 
   const loadDoctorStats = async () => {
+    if (!user?._id) {
+      console.log('[DoctorsPage] No user ID, skipping stats load')
+      return
+    }
+
     const stats: any = {}
-    for (const doctor of doctors.slice(0, 10)) { // Limit to first 10 to avoid too many API calls
-      try {
-        // Get appointment count
-        const appointmentsRes = await appointmentsAPI.getAppointments({ limit: 100 })
-        const appointments = appointmentsRes.data.data?.appointments || appointmentsRes.data.data || []
-        const doctorAppointments = appointments.filter((apt: any) => 
-          (typeof apt.doctorId === 'object' ? apt.doctorId._id : apt.doctorId) === doctor._id
-        )
+    
+    try {
+      // Get all appointments for the current patient (user)
+      const appointmentsRes = await appointmentsAPI.getAppointments({ limit: 1000 })
+      const allAppointments = appointmentsRes.data.data?.appointments || appointmentsRes.data.data || []
+      
+      // Filter appointments for the current patient
+      const patientAppointments = allAppointments.filter((apt: any) => {
+        const aptPatientId = typeof apt.patientId === 'object' ? apt.patientId._id : apt.patientId
+        return aptPatientId === user._id
+      })
+
+      // Group appointments by doctor
+      for (const doctor of doctors) {
+        const doctorAppointments = patientAppointments.filter((apt: any) => {
+          const aptDoctorId = typeof apt.doctorId === 'object' ? apt.doctorId._id : apt.doctorId
+          return aptDoctorId === doctor._id
+        })
         
         stats[doctor._id] = {
           appointmentCount: doctorAppointments.length,
@@ -105,10 +120,19 @@ export default function DoctorsPage() {
           }).length,
           completedAppointments: doctorAppointments.filter((apt: any) => apt.status === 'completed').length
         }
-      } catch (error) {
-        // Silently fail for individual doctor stats
       }
+    } catch (error) {
+      console.error('Error loading doctor stats:', error)
+      // Set empty stats for all doctors on error
+      doctors.forEach(doctor => {
+        stats[doctor._id] = {
+          appointmentCount: 0,
+          upcomingAppointments: 0,
+          completedAppointments: 0
+        }
+      })
     }
+    
     setDoctorStats(stats)
   }
 

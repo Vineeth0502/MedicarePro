@@ -1,24 +1,29 @@
 const mongoose = require('mongoose');
-require('dotenv').config({ path: '../.env' });
+const path = require('path');
+require('dotenv').config({ path: path.resolve(__dirname, '../.env') });
 const deviceSimulator = require('../src/services/deviceSimulator');
-
-const MONGODB_URI = process.env.MONGODB_URI || 'mongodb+srv://vineeth05:doCMGfSLHDjy0Iby@cluster0.8mcedne.mongodb.net/healthmonitor?retryWrites=true&w=majority';
 
 const generateMetricsNow = async () => {
   try {
+    const MONGODB_URI = process.env.MONGODB_URI;
+    
+    if (!MONGODB_URI) {
+      throw new Error('MONGODB_URI is not set in backend/.env file. Please add your MongoDB connection string.');
+    }
+    
     await mongoose.connect(MONGODB_URI);
-    console.log('✅ Connected to MongoDB');
+    console.log('Connected to MongoDB');
 
-    console.log('🔄 Generating metrics for all patients...');
+    console.log('Generating metrics for all patients...');
     await deviceSimulator.simulateDeviceData();
     
-    console.log('✅ Metrics generation complete!');
+    console.log('Metrics generation complete!');
 
   } catch (error) {
-    console.error('❌ Error generating metrics:', error);
+    console.error('Error generating metrics:', error);
   } finally {
     await mongoose.disconnect();
-    console.log('🔌 Disconnected from MongoDB');
+    console.log('Disconnected from MongoDB');
   }
 };
 

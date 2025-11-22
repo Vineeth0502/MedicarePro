@@ -135,13 +135,18 @@ export default function PatientMetricsPage() {
   }
 
   const loadMetrics = useCallback(async (silent = false) => {
-    if (!patientId) return
+    if (!patientId) {
+      console.log('[PatientMetrics] No patientId, skipping loadMetrics')
+      setLoading(false)
+      return
+    }
 
     if (!silent) {
       setLoading(true)
     }
 
     try {
+      console.log('[PatientMetrics] Fetching metrics for patient:', patientId, 'timeRange:', timeRange)
       const now = new Date()
       let startDate: Date
 
@@ -169,6 +174,7 @@ export default function PatientMetricsPage() {
       })
 
       const metricsData = res.data.data?.metrics || res.data.data || []
+      console.log('[PatientMetrics] Received metrics:', metricsData.length, 'items')
       setMetrics(Array.isArray(metricsData) ? metricsData : [])
       setLastUpdate(new Date())
 
@@ -176,10 +182,19 @@ export default function PatientMetricsPage() {
       if (!silent) {
         checkForAbnormalValues(metricsData)
       }
-    } catch (error) {
+    } catch (error: any) {
       console.error('Error loading metrics:', error)
+      // Set empty array on error to prevent infinite loading
+      setMetrics([])
       if (!silent) {
-        toast.error('Error', { description: 'Failed to load health metrics.' })
+        const errorMessage = error?.response?.data?.message || error?.message || 'Failed to load health metrics.'
+        toast.error('Error', { description: errorMessage })
+        // Log more details for debugging
+        if (error?.response?.status === 403) {
+          console.error('Access denied - user may not have provider role')
+        } else if (error?.response?.status === 404) {
+          console.error('Patient not found or no metrics available')
+        }
       }
     } finally {
       if (!silent) {
@@ -298,9 +313,13 @@ export default function PatientMetricsPage() {
 
   useEffect(() => {
     if (patientId) {
+      console.log('[PatientMetrics] Loading data for patient:', patientId)
       loadPatient()
-      loadMetrics()
+      loadMetrics() // This will set loading state properly
       loadAlerts()
+    } else {
+      // If no patientId, stop loading
+      console.log('[PatientMetrics] No patientId found')
       setLoading(false)
     }
   }, [patientId])
@@ -318,8 +337,10 @@ export default function PatientMetricsPage() {
   }, [patientId, loadMetrics])
 
   useEffect(() => {
-    loadMetrics()
-  }, [timeRange, loadMetrics])
+    if (patientId) {
+      loadMetrics() // Reload when timeRange changes
+    }
+  }, [timeRange, patientId])
 
   const getLatestValue = (metricType: string) => {
     const metric = metrics

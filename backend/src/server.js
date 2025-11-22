@@ -160,8 +160,12 @@ app.use((err, req, res, next) => {
 // MongoDB connection
 const connectDB = async () => {
   try {
-    // Use MongoDB Atlas connection string
-    const mongoURI = process.env.MONGODB_URI || 'mongodb+srv://vineeth05:doCMGfSLHDjy0Iby@cluster0.8mcedne.mongodb.net/healthmonitor?retryWrites=true&w=majority';
+    // Use MongoDB Atlas connection string from .env
+    const mongoURI = process.env.MONGODB_URI;
+    
+    if (!mongoURI) {
+      throw new Error('MONGODB_URI is not set in .env file. Please add your MongoDB connection string to backend/.env');
+    }
     
     console.log('Connecting to MongoDB Atlas...');
     

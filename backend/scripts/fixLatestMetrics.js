@@ -7,7 +7,11 @@ const deviceSimulator = require('../src/services/deviceSimulator');
 
 async function fixLatestMetrics() {
   try {
-    const mongoURI = process.env.MONGODB_URI || 'mongodb+srv://vineeth05:doCMGfSLHDjy0Iby@cluster0.8mcedne.mongodb.net/healthmonitor?retryWrites=true&w=majority';
+    const mongoURI = process.env.MONGODB_URI;
+    
+    if (!mongoURI) {
+      throw new Error('MONGODB_URI is not set in backend/.env file. Please add your MongoDB connection string.');
+    }
     
     console.log('Connecting to MongoDB Atlas...');
     await mongoose.connect(mongoURI, {
