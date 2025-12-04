@@ -304,6 +304,117 @@ NODE_ENV=production npm start
 
 ---
 
+## 🚀 Deployment to Vercel
+
+> 📖 **Quick Start**: See [VERCEL_ENV_SETUP.md](./VERCEL_ENV_SETUP.md) for step-by-step instructions on copying your `.env` values to Vercel.
+
+### Frontend Deployment
+
+The frontend is configured to connect to the production backend at `https://medicare-pro-neon.vercel.app/api`.
+
+#### Step 1: Set Environment Variables in Vercel
+
+1. Go to your Vercel project dashboard
+2. Navigate to **Settings** → **Environment Variables**
+3. Add the following environment variable:
+   - **Name**: `NEXT_PUBLIC_API_URL`
+   - **Value**: `https://medicare-pro-neon.vercel.app/api`
+   - **Environment**: Production, Preview, and Development
+
+#### Step 2: Deploy
+
+If you haven't deployed yet:
+
+1. Install Vercel CLI (if not already installed):
+   ```bash
+   npm i -g vercel
+   ```
+
+2. Deploy to Vercel:
+   ```bash
+   vercel
+   ```
+
+3. Follow the prompts to link your project
+
+Or push to your connected Git repository - Vercel will automatically deploy.
+
+#### Step 3: Verify Deployment
+
+After deployment:
+1. Check that your frontend is accessible
+2. Try logging in to verify API connectivity
+3. Check browser console for any CORS or API errors
+
+### Backend Deployment
+
+The backend is already deployed at `https://medicare-pro-neon.vercel.app/`. 
+
+#### ⚠️ Critical: Set Environment Variables in Vercel
+
+**`.env` files are NOT deployed to Vercel!** You must set environment variables in the Vercel dashboard.
+
+1. **Go to Vercel Dashboard**
+   - Navigate to your backend project (the one at `medicare-pro-neon.vercel.app`)
+   - Go to **Settings** → **Environment Variables**
+
+2. **Add Required Variables**:
+   
+   | Variable | Description | Example |
+   |----------|-------------|---------|
+   | `MONGODB_URI` | MongoDB Atlas connection string | `mongodb+srv://user:pass@cluster.mongodb.net/dbname` |
+   | `JWT_SECRET` | Secret key for JWT tokens (min 32 chars) | Generate with: `node -e "console.log(require('crypto').randomBytes(32).toString('hex'))"` |
+   | `FRONTEND_URL` | Your frontend Vercel URL | `https://your-frontend-app.vercel.app` |
+   | `NODE_ENV` | Environment mode | `production` |
+
+3. **For Each Variable**:
+   - Click **Add New**
+   - Enter Name and Value
+   - Select **Production**, **Preview**, and **Development** environments
+   - Click **Save**
+
+4. **Redeploy After Adding Variables**:
+   - Go to **Deployments** tab
+   - Click **⋯** (three dots) on latest deployment
+   - Click **Redeploy**
+
+#### Getting MongoDB Connection String
+
+1. Go to [MongoDB Atlas](https://www.mongodb.com/cloud/atlas)
+2. Navigate to your cluster → **Connect** → **Connect your application**
+3. Copy the connection string
+4. Replace `<password>` with your database password
+5. Replace `<dbname>` with your database name
+
+#### Verifying Backend Setup
+
+After setting environment variables and redeploying:
+
+1. **Check Health Endpoint**:
+   ```bash
+   curl https://medicare-pro-neon.vercel.app/health
+   ```
+   Should return: `{"success":true,"message":"HealthMonitor API is running"}`
+
+2. **Check Vercel Logs**:
+   - Go to your deployment → **Logs** tab
+   - Look for: `MongoDB Atlas connected successfully`
+
+📖 **For detailed backend deployment instructions, see [backend/DEPLOYMENT.md](backend/DEPLOYMENT.md)**
+
+### Local Development
+
+For local development, create a `.env.local` file in the root directory:
+
+```bash
+# .env.local
+NEXT_PUBLIC_API_URL=http://localhost:5001/api
+```
+
+This will override the production backend URL when running locally.
+
+---
+
 ## 📁 Project Structure
 
 ```

@@ -11,6 +11,7 @@ import { Badge } from "@/components/ui/badge"
 import { Send, Search, MessageSquare, MoreVertical, Trash2, Smile, Plus, Image as ImageIcon, FileText, X, Check, CheckCheck } from "lucide-react"
 import { messagesAPI, usersAPI } from "@/lib/api"
 import { format } from "date-fns"
+import { getBackendBaseUrl } from "@/lib/utils"
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -785,7 +786,7 @@ export default function MessagesPage() {
                                     const isImage = attachment.fileType?.startsWith('image/')
                                     const fileUrl = attachment.fileUrl?.startsWith('http') 
                                       ? attachment.fileUrl 
-                                      : `http://localhost:5001${attachment.fileUrl}`
+                                      : `${getBackendBaseUrl()}${attachment.fileUrl}`
                                     
                                     return (
                                       <div key={idx} className="rounded overflow-hidden">
@@ -920,7 +921,7 @@ export default function MessagesPage() {
                                     const isImage = attachment.fileType?.startsWith('image/')
                                     const fileUrl = attachment.fileUrl?.startsWith('http') 
                                       ? attachment.fileUrl 
-                                      : `http://localhost:5001${attachment.fileUrl}`
+                                      : `${getBackendBaseUrl()}${attachment.fileUrl}`
                                     
                                     return (
                                       <div key={idx} className="rounded overflow-hidden">

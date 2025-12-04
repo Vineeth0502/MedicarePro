@@ -8,6 +8,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { User, Camera, X, Loader2, Save } from "lucide-react"
 import { usersAPI } from "@/lib/api"
 import { toast } from "sonner"
+import { getBackendBaseUrl } from "@/lib/utils"
 
 export default function ProfilePage() {
   const router = useRouter()
@@ -27,7 +28,7 @@ export default function ProfilePage() {
           // If profilePicture is a relative path, make it absolute
           const pictureUrl = parsedUser.profilePicture.startsWith('http')
             ? parsedUser.profilePicture
-            : `${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5001'}${parsedUser.profilePicture}`
+            : `${getBackendBaseUrl()}${parsedUser.profilePicture}`
           setPreview(pictureUrl)
         }
       } else {
@@ -48,7 +49,7 @@ export default function ProfilePage() {
         if (userData.profilePicture) {
           const pictureUrl = userData.profilePicture.startsWith('http')
             ? userData.profilePicture
-            : `${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5001'}${userData.profilePicture}`
+            : `${getBackendBaseUrl()}${userData.profilePicture}`
           setPreview(pictureUrl)
         }
       }
@@ -145,7 +146,7 @@ export default function ProfilePage() {
     if (user?.profilePicture) {
       const pictureUrl = user.profilePicture.startsWith('http')
         ? user.profilePicture
-        : `${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5001'}${user.profilePicture}`
+        : `${getBackendBaseUrl()}${user.profilePicture}`
       setPreview(pictureUrl)
     } else {
       setPreview(null)

@@ -2,14 +2,16 @@
 
 This is the backend server for the HealthMonitor application.
 
-## Setup
+## 🚀 Quick Start
+
+### Local Development
 
 1. Install dependencies:
 ```bash
 npm install
 ```
 
-2. Create a `.env` file (optional - defaults are set in server.js):
+2. Create a `.env` file in the `backend/` directory:
 ```env
 MONGODB_URI=mongodb+srv://your-connection-string
 PORT=5001
@@ -26,6 +28,18 @@ npm run dev
 # Production
 npm start
 ```
+
+## 📦 Deployment to Vercel
+
+**⚠️ IMPORTANT**: When deploying to Vercel, `.env` files are NOT deployed. You must set environment variables in the Vercel dashboard.
+
+### Required Environment Variables:
+- `MONGODB_URI` - MongoDB Atlas connection string
+- `JWT_SECRET` - Secret key for JWT tokens (min 32 characters)
+- `FRONTEND_URL` - Your frontend Vercel URL
+- `NODE_ENV` - Set to `production`
+
+📖 **See [DEPLOYMENT.md](./DEPLOYMENT.md) for complete deployment instructions.**
 
 ## API Endpoints
 

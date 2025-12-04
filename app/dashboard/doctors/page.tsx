@@ -26,6 +26,7 @@ import {
 } from "lucide-react"
 import { usersAPI, appointmentsAPI } from "@/lib/api"
 import { format, formatDistanceToNow } from "date-fns"
+import { getBackendBaseUrl } from "@/lib/utils"
 import {
   Select,
   SelectContent,
@@ -349,7 +350,7 @@ export default function DoctorsPage() {
                           src={doctor.profilePicture 
                             ? (doctor.profilePicture.startsWith('http') 
                                 ? doctor.profilePicture 
-                                : `${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5001'}${doctor.profilePicture}`)
+                                : `${getBackendBaseUrl()}${doctor.profilePicture}`)
                             : undefined
                           } 
                           alt={name} 
@@ -468,7 +469,7 @@ export default function DoctorsPage() {
                             src={doctor.profilePicture 
                               ? (doctor.profilePicture.startsWith('http') 
                                   ? doctor.profilePicture 
-                                  : `${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5001'}${doctor.profilePicture}`)
+                                  : `${getBackendBaseUrl()}${doctor.profilePicture}`)
                               : undefined
                             } 
                             alt={name} 

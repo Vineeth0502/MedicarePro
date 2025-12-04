@@ -4,7 +4,7 @@ import { useEffect, useState } from "react"
 import { useRouter } from "next/navigation"
 import Link from "next/link"
 import { usePathname } from "next/navigation"
-import { cn } from "@/lib/utils"
+import { cn, getBackendBaseUrl } from "@/lib/utils"
 import {
   LayoutDashboard,
   Users,
@@ -88,7 +88,7 @@ function UserProfileSection() {
             src={user?.profilePicture 
               ? (user.profilePicture.startsWith('http') 
                   ? user.profilePicture 
-                  : `${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5001'}${user.profilePicture}`)
+                  : `${getBackendBaseUrl()}${user.profilePicture}`)
               : undefined
             } 
             alt={getUserName()} 

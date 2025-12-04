@@ -17,6 +17,7 @@ import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { authAPI, alertsAPI } from "@/lib/api"
 import { NotificationCenter } from "./notification-center"
+import { getBackendBaseUrl } from "@/lib/utils"
 
 export function Header() {
   const router = useRouter()
@@ -392,7 +393,7 @@ export function Header() {
                   src={user?.profilePicture 
                     ? (user.profilePicture.startsWith('http') 
                         ? user.profilePicture 
-                        : `${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5001'}${user.profilePicture}`)
+                        : `${getBackendBaseUrl()}${user.profilePicture}`)
                     : undefined
                   } 
                   alt={getUserName()} 
