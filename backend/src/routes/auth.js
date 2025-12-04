@@ -170,7 +170,7 @@ router.post('/login', [
   try {
     // Check if MongoDB is connected and reconnect if needed
     const mongoose = require('mongoose');
-    const { ensureDBConnection } = require('../server');
+    const { ensureDBConnection } = require('../utils/db');
     
     if (mongoose.connection.readyState !== 1) {
       // Try to reconnect
