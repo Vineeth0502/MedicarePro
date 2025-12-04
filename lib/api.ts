@@ -3,7 +3,7 @@ import axios from 'axios';
 // API Base URL - defaults to production backend if not specified
 // For local development, set NEXT_PUBLIC_API_URL=http://localhost:5001/api in .env.local
 // For Vercel deployment, set NEXT_PUBLIC_API_URL in Vercel dashboard
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'https://medicare-pro-neon.vercel.app/api';
+const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'https://medicare-pro-sand.vercel.app/api';
 
 // Create axios instance
 const api = axios.create({
