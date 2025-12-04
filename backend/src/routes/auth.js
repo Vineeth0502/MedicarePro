@@ -168,14 +168,20 @@ router.post('/login', [
     .withMessage('Password is required')
 ], async (req, res) => {
   try {
-    // Check if MongoDB is connected
+    // Check if MongoDB is connected and reconnect if needed
     const mongoose = require('mongoose');
+    const { ensureDBConnection } = require('../server');
+    
     if (mongoose.connection.readyState !== 1) {
-      return res.status(503).json({
-        success: false,
-        message: 'Database connection unavailable. Please try again later.',
-        error: 'MongoDB not connected'
-      });
+      // Try to reconnect
+      const connected = await ensureDBConnection();
+      if (!connected) {
+        return res.status(503).json({
+          success: false,
+          message: 'Database connection unavailable. Please try again later.',
+          error: 'MongoDB not connected'
+        });
+      }
     }
 
     // Check for validation errors
