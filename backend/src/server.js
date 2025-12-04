@@ -39,7 +39,9 @@ const corsOptions = {
       'http://127.0.0.1:3001',
       // Vercel frontend URLs (wildcard for preview deployments)
       /^https:\/\/medicare-pro.*\.vercel\.app$/,
-      /^https:\/\/.*-medicare-pro.*\.vercel\.app$/
+      /^https:\/\/.*-medicare-pro.*\.vercel\.app$/,
+      // Specific frontend URL
+      'https://medicare-pro-tu6m.vercel.app'
     ];
     
     // Check if origin matches any allowed origin (string or regex)
